@@ -1,0 +1,278 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #F5F5F5;
+    padding: 2em;
+}
+
+.container {
+    background-color: #FFFFFF;
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+form, table {
+    width: 100%; /* Adjust this value as needed */
+}
+
+
+input[type="text"], input[type="number"], select {
+    width: 100%;
+    padding: 1em;
+    margin: 0.5em 0;
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+input[type="submit"] {
+}
+
+form, table {
+    width: 45%; /* Adjust this value as needed */
+}
+
+input[type="number"] {
+    padding: 0.5em;
+    margin: 0.5em 0;
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+}
+
+input[type="submit"] {
+    padding: 0.5em 1em;
+    color: white;
+    background-color: #007BFF; /* Bootstrap primary color */
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+/* This styles the submit button */
+input[type="submit"] {
+    padding: 0.5em 1em;
+    color: white;
+    background-color: #007BFF; /* Bootstrap primary color */
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+/* This changes the button color when you hover over it */
+input[type="submit"]:hover {
+    background-color: #0056b3; /* Darker shade of Bootstrap primary color */
+}
+
+/* This styles the main headers */
+h1 {
+    color: #333333;
+    font-size: 20px;
+    line-height: 1.5;
+    font-size: 40px;
+    text-align: left;
+}
+h2 {
+    color: #333333;
+    font-size: 20px;
+    line-height: 1.5;
+    font-size: 40px;
+    text-align: center;
+}
+
+/* This styles the table */
+table {
+    background-color: #FFFFFF;
+    border-collapse: collapse;
+}
+
+/* This styles the table cells */
+table, th, td {
+    border: 1px solid #CCCCCC;
+    padding: 0.5em;
+}
+
+th {
+    background-color: #007BFF; /* Bootstrap primary color */
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #F2F2F2; /* Light gray for even rows */
+}
+
+tr:hover {
+    background-color: #ddd; /* Lighter gray for hovered rows */
+}
+
+.flex-container {
+    display: flex; /* Enables Flexbox */
+    justify-content: space-between; /* Spaces the children evenly */
+    align-items: flex-start; /* Aligns children at the start of the container */
+}
+
+.form-container,
+.table-container {
+    flex: 1; /* Allow the table container to grow and fill the available space */
+    width: auto; /* Set the width to auto to allow it to grow */
+    margin-right: 0; /* Make sure there is no margin pushing it to the right */
+}
+
+/* Ensure the table doesn't overflow its container */
+.table-portfolio {
+    width: 100%; /* Full width within its container */
+    overflow-x: auto; /* Allows for scrolling if the content overflows */
+}
+
+    flex: 1; /* Each child will take up equal space */
+    padding: 10px; /* Adds some spacing around each child */
+
+/* Optional: Add more styling as needed */
+
+/* Google Font Import */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #e8eff1; /* Lighter shade for a modern look */
+}
+
+.container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+input[type="text"], input[type="number"], select {
+    background-color: #fdfdfd;
+    border: 1px solid #d1d1d1;
+    border-radius: 4px;
+    padding: 12px;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus, input[type="number"]:focus, select:focus {
+    border-color: #1a73e8; /* Highlight focus with a blue border */
+    outline: none;
+}
+
+button {
+    background-color: #1a73e8; /* Blue color for buttons */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0f57c2; /* Darker blue on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .flex-container {
+        flex-direction: column;
+    }
+}
+
+/* Subtle animations for form elements */
+input[type="text"], input[type="number"], select, button {
+    transition: all 0.3s ease;
+}
+
+/* Hover effect for inputs */
+input[type="text"]:hover, input[type="number"]:hover, select:hover {
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+}
+
+input[type="submit"] {
+    padding: 15px 30px; /* Increased padding for a larger button */
+    font-size: 1.2em; /* Slightly larger font size for better visibility */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition for hover effects */
+}
+
+input[type="submit"]:hover {
+    transform: scale(1.05); /* Slight increase in size on hover for a dynamic effect */
+}
+
+/* Advanced Table Styling for Portfolio Management Section */
+.table-portfolio {
+    border-collapse: collapse;
+    margin-top: 1em;
+    font-size: 0.95em; /* Slightly smaller font size for a more compact look */
+    color: #333; /* Darker font color for contrast */
+}
+
+.table-portfolio th, .table-portfolio td {
+    text-align: left;
+    padding: 15px; /* Increased padding for better spacing */
+    border-bottom: 2px solid #eaeaea; /* Subtle border for rows */
+}
+
+.table-portfolio th {
+    background-color: #4a5568; /* Darker shade for header */
+    color: #ffffff;
+    font-weight: 600; /* Slightly bolder font for headers */
+}
+
+.table-portfolio tr:nth-child(odd) {
+    background-color: #f7fafc; /* Alternate row color for better readability */
+}
+
+.table-portfolio tr:nth-child(even) {
+    background-color: #edf2f7;
+}
+
+.table-portfolio tr:hover {
+    background-color: #cbd5e0; /* More subtle hover color */
+    cursor: pointer;
+}
+
+.table-portfolio td {
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Wider Cells for Portfolio Management Table */
+.table-portfolio {
+    width: 100%; /* Ensuring the table takes full width */
+}
+
+.table-portfolio th, .table-portfolio td {
+    padding: 15px; /* Maintaining padding but can adjust as needed */
+    min-width: 120px; /* Setting a minimum width for each cell for more space */
+}
+
+.table-portfolio th {
+    white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.table-container {
+    overflow-x: auto; /* Enable horizontal scrolling if the table is too wide */
+}
+th {
+    white-space: nowrap;
+}
+.table-container {
+    overflow-x: visible; /* Make overflowing content visible without a scrollbar */
+}
+.generate-report-btn {
+    background-color: green;
+    color: white;
+    padding: 20px 40px; /* Increased padding for a larger button */
+    font-size: 22px; /* Larger font size for better visibility */
+    border: none;
+    border-radius: 8px; /* Slightly larger radius for aesthetic consistency */
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.generate-report-btn:hover {
+    background-color: darkgreen;
+}
