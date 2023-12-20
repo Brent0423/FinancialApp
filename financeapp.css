@@ -59,6 +59,7 @@ th,
 td {
     border: 1px solid #CCCCCC;
     padding: 0.5em;
+    text-align: center;
 }
 
 table {
