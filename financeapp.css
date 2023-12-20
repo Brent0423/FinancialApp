@@ -130,7 +130,7 @@ button:hover {
     background-color: green;
     color: white;
     padding: 20px 40px;
-    font-size: 22px;
+    font-size: 24px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -175,12 +175,17 @@ button:hover {
 .table-container {
     overflow-x: auto;
 }
+
+/* ID Selectors */
 #submit {
     font-size: 20px; /* Font size for id submit */
 }
-#Generate{
+
+#Generate {
     font-size: 10px;
 }
+
+/* Return Container Styles */
 .return-container {
     display: flex; /* Arrange elements horizontally */
     justify-content: space-between; /* Distribute space evenly between elements */
@@ -195,6 +200,8 @@ button:hover {
 .return-container input[type="checkbox"] {
     margin-right: 5px; /* Adjust spacing as needed */
 }
+
+/* Input Row Styles */
 .input-row {
     display: flex;
     justify-content: space-between;
@@ -220,4 +227,18 @@ button:hover {
 /* Ensure the input does not stretch too much */
 .input-group input[type="number"] {
     width: auto; /* Or you can specify a width */
+}
+
+/* Additional Styles */
+.button-container {
+    position: center;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.generate-report-btn {
+    font-size: 24px !important;
+    padding: 15px 30px !important;
 }
