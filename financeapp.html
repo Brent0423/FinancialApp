@@ -73,7 +73,8 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Stock</th>
+                            <th>Company</th>
+                            <th>Stock Price</th>
                             <th>Investment Amount</th>
                             <th>Anticipated Return Rate (%)</th>
                             <th>Time Frame (years)</th>
@@ -93,54 +94,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        const form = document.querySelector('form');
-        const tableBody = document.querySelector('tbody');
-
-        form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form submission
-
-            // Your code to handle the form submission goes here
-
-            console.log('Form submitted');
-
-            // Get the input values from the form
-            const stockTicker = document.querySelector('#stockTicker').value;
-            const investmentAmount = document.querySelector('#investmentAmount').value;
-            const returnRate = document.querySelector('#returnRate').value;
-            const timeFrame = document.querySelector('#timeFrame').value;
-
-            // Create a new row in the table
-            const newRow = document.createElement('tr');
-
-            // Create table cells for each input value and append to the row
-            [stockTicker, investmentAmount, returnRate, timeFrame].forEach(text => {
-                const newCell = document.createElement('td');
-                newCell.textContent = text;
-                newRow.appendChild(newCell);
-            });
-
-            // Create an empty cell for the 'Confidence Interval' column
-            const confidenceIntervalCell = document.createElement('td');
-            newRow.appendChild(confidenceIntervalCell);
-
-            // Create a cell for the remove button
-            const removeCell = document.createElement('td');
-            const removeButton = document.createElement('button');
-            removeButton.textContent = 'x';
-            removeButton.addEventListener('click', function() {
-                newRow.remove(); // Remove the row when the button is clicked
-            });
-            removeCell.appendChild(removeButton);
-            newRow.appendChild(removeCell);
-
-            // Append the new row to the table body
-            tableBody.appendChild(newRow);
-
-            // Reset the form
-            event.target.reset();
-        });
-    </script>
+    <script src="financeapp.js"></script>
 </body>
 </html>
