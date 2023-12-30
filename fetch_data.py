@@ -32,21 +32,21 @@ def fetch_data(symbol, years):
         z_score = (current_price - mean) / std_dev
 
         # Calculate the 95% confidence interval
-        confidence_interval = 1.96 * (std_dev / np.sqrt(len(first_prices)))
+        confidence_interval = round(1.96 * (std_dev / np.sqrt(len(first_prices))), 2)
 
         # Calculate the annualized rate of return
         beginning_price = closing_prices.iloc[0]
         ending_price = closing_prices.iloc[-1]
-        annualized_return = ((ending_price / beginning_price) ** (1/years) - 1) * 100
+        annualized_return = round(((ending_price / beginning_price) ** (1/years) - 1) * 100, 2)
 
-        print(f"Current stock price for {symbol}: {current_price}")
-        print(f"Z-Score for {symbol}: {z_score}")
-        print(f"Mean of first closing prices for {symbol}: {mean}")
-        print(f"Standard deviation of first closing prices for {symbol}: {std_dev}")
-        print(f"95% confidence interval for {symbol}: {mean - confidence_interval} to {mean + confidence_interval}")
+        print(f"Current stock price for {symbol}: {round(current_price, 2)}")
+        print(f"Z-Score for {symbol}: {round(z_score, 2)}")
+        print(f"Mean of first closing prices for {symbol}: {round(mean, 2)}")
+        print(f"Standard deviation of first closing prices for {symbol}: {round(std_dev, 2)}")
+        print(f"95% confidence interval for {symbol}: {round(mean - confidence_interval, 2)} to {round(mean + confidence_interval, 2)}")
         print(f"Annualized rate of return for {symbol} over {years} years: {annualized_return}%")
 
-        return mean, std_dev, z_score, confidence_interval, current_price, annualized_return
+        return round(mean, 2), round(std_dev, 2), round(z_score, 2), round(confidence_interval, 2), round(current_price, 2), annualized_return
     except Exception as e:
         print(f"An error occurred while fetching data for {symbol}: {e}")
 
