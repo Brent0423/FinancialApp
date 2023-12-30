@@ -1,36 +1,22 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import org.json.JSONObject;
+
 
 public class Main {
-    public static void main(String[] args) {
-        try {
-            String token = "pk_4dce35d553e644cdba95c55f314b1e1f";
-            String symbol = "HSY";
-            String urlString = "https://cloud.iexapis.com/stable/stock/" + symbol + "/quote?token=" + token;
+    public static void main(String[] args) throws IOException {
+        Scanner scanner = new Scanner(System.in);
 
-            URI uri = new URI(urlString);
-            URL url = uri.toURL();
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        System.out.print("Enter stock symbol: ");
+        String symbol = scanner.nextLine();
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line;
-            StringBuilder response = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-            reader.close();
+        System.out.print("Enter year: ");
+        String year = scanner.nextLine();
 
-            JSONObject json = new JSONObject(response.toString());
-            double latestPrice = json.getDouble("latestPrice");
+        ProcessBuilder pb = new ProcessBuilder("python3", "fetch_data.py", symbol, year);
+        Process process = pb.start();
 
-            System.out.println("The latest price of " + symbol + " is: " + latestPrice);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
         }
     }
 }
