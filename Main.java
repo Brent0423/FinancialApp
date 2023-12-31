@@ -1,5 +1,6 @@
-import java.io.IOException;
+import org.json.JSONObject;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
@@ -17,9 +18,17 @@ public class Main {
         Process process = pb.start();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line;
+        String lastLine = "", line;
         while ((line = reader.readLine()) != null) {
-            System.out.println(line);
+            System.out.println(line);  // print all lines
+            lastLine = line;
         }
+
+        // New code to split the last line into two parts at the '{' character
+        String[] parts = lastLine.split("\\{", 2);
+        String jsonData = "{" + parts[1];
+
+        JSONObject jsonObject = new JSONObject(jsonData);
+        System.out.println(jsonObject);
     }
 }

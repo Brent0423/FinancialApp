@@ -8,57 +8,29 @@ import com.google.gson.Gson;
 public class InvestmentServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html");
+        response.setContentType("application/json");
         PrintWriter out = response.getWriter();
-        out.println("Hello from InvestmentServlet");
+
+        // Get the stock symbol and year from the request parameters
+        String symbol = request.getParameter("symbol");
+        String year = request.getParameter("year");
+
+        // Call your Python script and get the output
+        ProcessBuilder pb = new ProcessBuilder("python3", "fetch_data.py", symbol, year);
+        Process process = pb.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String output = reader.readLine();
+
+        // Convert the output to JSON
+        Gson gson = new Gson();
+        String json = gson.toJson(output);
+
+        // Send the JSON as the response
+        out.println(json);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Handle POST request here
-
-        BufferedReader reader = request.getReader();
-        StringBuilder builder = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            builder.append(line);
-        }
-        String data = builder.toString();
-
-        Gson gson = new Gson();
-        InvestmentData investmentData = gson.fromJson(data, InvestmentData.class);
-
-        // Use investmentData here
-        // Perform your calculations here. For example:
-        double investmentReturn = calculateInvestmentReturn(investmentData);
-
-        // Then, you can include the result in the response data.
-    }
-
-    private double calculateInvestmentReturn(InvestmentData investmentData) {
-        // Replace this with your actual calculation.
-        return investmentData.getInvestmentAmount() * 1.05;
-    }
-
-    public class InvestmentData {
-        private String stockSymbol;
-        private double investmentAmount;
-
-        // getters and setters
-        public String getStockSymbol() {
-            return stockSymbol;
-        }
-
-        public void setStockSymbol(String stockSymbol) {
-            this.stockSymbol = stockSymbol;
-        }
-
-        public double getInvestmentAmount() {
-            return investmentAmount;
-        }
-
-        public void setInvestmentAmount(double investmentAmount) {
-            this.investmentAmount = investmentAmount;
-        }
     }
 }
