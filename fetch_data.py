@@ -35,7 +35,8 @@ def fetch_data(symbol, years):
         z_score = (current_price - mean) / std_dev
 
         # Calculate the 95% confidence interval
-        confidence_interval = round(1.96 * (std_dev / np.sqrt(len(first_prices))), 2)
+        confidence_interval = (round(mean - 1.96 * (std_dev / np.sqrt(len(first_prices))), 2),
+                               round(mean + 1.96 * (std_dev / np.sqrt(len(first_prices))), 2))
 
         # Calculate the annualized rate of return
         beginning_price = closing_prices.iloc[0]
@@ -49,7 +50,7 @@ def fetch_data(symbol, years):
             'z_score': round(z_score, 2),
             'mean': round(mean, 2),
             'std_dev': round(std_dev, 2),
-            'confidence_interval': round(confidence_interval, 2),
+            'confidence_interval': confidence_interval,
             'annualized_return': annualized_return
         }
 

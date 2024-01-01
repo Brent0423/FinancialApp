@@ -47,7 +47,7 @@ def update_table():
         'investment_amount': investment_amount,
         'annualized_return': fetched_data['annualized_return'],  # Use the fetched annualized return
         'time_frame': time_frame,
-        'confidence_interval': fetched_data['confidence_interval']  # Use the fetched confidence interval
+        'confidence_interval': f"{fetched_data['confidence_interval'][0]} - {fetched_data['confidence_interval'][1]}"  # Format the confidence interval as a string
     }
 
     # Return the data as JSON
