@@ -6,7 +6,10 @@ import numpy as np
 import json
 
 def fetch_data(symbol, years):
+    print(f"fetch_data called with symbol={symbol} and years={years}")
     try:
+        years = int(years)  # Convert years to integer
+
         stock = yf.Ticker(symbol)
         data = stock.history(period='max')  # get all available data
         first_trade_date = data.index[0]

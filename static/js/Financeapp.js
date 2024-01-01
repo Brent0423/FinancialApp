@@ -10,51 +10,41 @@ function fetchStockPrice(stockTicker) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.querySelector('form');
-    const tableBody = document.querySelector('tbody');
+$(document).on('click', '.remove-btn', function() {
+    // If the clicked element has the 'remove-btn' class, remove its parent `tr`
+    $(this).closest('tr').remove();
+});
 
-    form.addEventListener('submit', async function(event) {
-        event.preventDefault(); // Prevent default form submission
+$('#investmentForm').on('submit', function(event) {
+    event.preventDefault();
 
-        console.log('Form submitted');
+    // You would need to get these values from the form or another source
+    const investmentAmount = $('#investmentAmount').val(); // Placeholder for investment amount
+    const timeFrame = $('#timeFrame').val(); // Placeholder for time frame
 
-        // Retrieve input values
-        const stockTicker = document.querySelector('#stockTicker').value;
-        const investmentAmount = document.querySelector('#investmentAmount').value;
-        const returnRate = document.querySelector('#returnRate').value;
-        const timeFrame = document.querySelector('#timeFrame').value;
+    $.ajax({
+        url: '/update_table',
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function(data) {
+            // Now append the new row
+            const newRow = $('<tr></tr>');
 
-        try {
-            // Fetch stock price asynchronously
-            const stockPrice = await fetchStockPrice(stockTicker);
+            newRow.append('<td>' + data.stock_symbol + '</td>'); // Company
+            newRow.append('<td>' + data.current_price + '</td>'); // Stock Price
+            newRow.append('<td>' + investmentAmount + '</td>'); // Investment Amount (placeholder value)
+            newRow.append('<td>' + data.annualized_return + '</td>'); // Anticipated Return Rate (%)
+            newRow.append('<td>' + timeFrame + '</td>'); // Time Frame (placeholder value)
+            newRow.append('<td>' + data.confidence_interval + '</td>'); // Confidence Interval
 
-            // Create a new row and populate it
-            const newRow = document.createElement('tr');
-            [stockTicker, stockPrice, investmentAmount, returnRate, timeFrame].forEach(text => {
-                const newCell = document.createElement('td');
-                newCell.textContent = text;
-                newRow.appendChild(newCell);
-            });
+            // Add the remove button
+            newRow.append('<td><button class="remove-btn">X</button></td>'); // Actions
 
-            // Add a cell for 'Confidence Interval' (modify as needed)
-            const confidenceIntervalCell = document.createElement('td');
-            confidenceIntervalCell.textContent = 'N/A'; // Placeholder value
-            newRow.appendChild(confidenceIntervalCell);
+            // Append the new row to the table body
+            $('tbody').append(newRow);
 
-            // Add a cell for the 'Actions' column (e.g., a remove button)
-            const removeCell = document.createElement('td');
-            const removeButton = document.createElement('button');
-            removeButton.textContent = 'Remove';
-            removeButton.onclick = function() { this.parentNode.parentNode.remove(); };
-            removeCell.appendChild(removeButton);
-            newRow.appendChild(removeCell);
-
-            // Append the new row to the table
-            tableBody.appendChild(newRow);
-        } catch (error) {
-            console.error('Error fetching stock price:', error);
-            // Handle the error (e.g., show an alert or a message in the UI)
+            // Clear the form
+            event.target.reset();
         }
     });
 });

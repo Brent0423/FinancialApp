@@ -3,6 +3,7 @@
 <head>
     <title>Finance App</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/financeapp.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -10,10 +11,10 @@
             <!-- Investment Entry Form -->
             <div class="form-container">
                 <h1>Investment Entry</h1>
-                <form>
+                <form action="#" method="post" id="investmentForm">
                     <!-- Stock Ticker Input -->
                     <label for="stockTicker">Stock Ticker:</label>
-                    <input type="text" id="stockTicker" name="stockTicker" required><br><br>
+                    <input type="text" id="stockTicker" name="symbol" required><br><br>
 
                     <!-- Investment Amount Input -->
                     <label for="investmentAmount">Investment Amount:</label>
@@ -31,11 +32,9 @@
                         </div>
                     </div>
 
-
                     <!-- Desired Time Frame Selection -->
                     <label for="timeFrame">Desired Time Frame (years):</label>
                     <input type="number" id="timeFrame" name="timeFrame" min="1" required><br><br>
-                    </select><br><br>
 
                     <div class="inflation-container">
                         <label for="inflation">Expected Inflation Rate:</label>
@@ -79,7 +78,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Add table rows here -->
+                        {% if data %}
+                        <tr>
+                            <td>{{ data.stock_symbol }}</td>
+                            <td>{{ data.current_price }}</td>
+                            <td>{{ data.investment_amount }}</td>
+                            <td>{{ data.annualized_return }}</td>
+                            <td>{{ data.time_frame }}</td>
+                            <td>{{ data.confidence_interval }}</td>
+                            <td><button class="remove-btn">X</button></td>
+                        </tr>
+                        {% endif %}
                     </tbody>
                 </table>
                 <!-- Generate Report Button -->
@@ -90,6 +99,6 @@
             </div>
         </div>
     </div>
-    <script src="Financeapp.js"></script>
+    <script src="{{ url_for('static', filename='js/Financeapp.js') }}"></script>
 </body>
 </html>
