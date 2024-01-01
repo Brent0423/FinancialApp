@@ -1,14 +1,8 @@
 <!DOCTYPE html>
-<head>
-    <title>Investment Report</title>
-    <link rel="stylesheet" type="text/css" href="dashboard.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<!DOCTYPE html>
 <html>
 <head>
     <title>Investment Report</title>
-    <link rel="stylesheet" type="text/css" href="src/main/webapp/css files/dashboard.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -24,7 +18,6 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="chartConfig.js"></script>
+    <script src="{{ url_for('static', filename='js/chartConfig.js') }}"></script>
 </body>
 </html>

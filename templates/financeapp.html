@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Finance App</title>
-    <link rel="stylesheet" type="text/css" href="financeapp.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/financeapp.css') }}">
 </head>
 <body>
     <div class="container">
@@ -34,11 +34,7 @@
 
                     <!-- Desired Time Frame Selection -->
                     <label for="timeFrame">Desired Time Frame (years):</label>
-                    <select id="timeFrame" name="timeFrame" required>
-                        <option value="1">1</option>
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="20">20</option>
+                    <input type="number" id="timeFrame" name="timeFrame" min="1" required><br><br>
                     </select><br><br>
 
                     <div class="inflation-container">
