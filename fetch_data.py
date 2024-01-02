@@ -5,10 +5,11 @@ import pytz
 import numpy as np
 import json
 
-def fetch_data(symbol, years):
-    print(f"fetch_data called with symbol={symbol} and years={years}")
+def fetch_data(symbol, years, inflation_rate):
+    print(f"fetch_data called with symbol={symbol}, years={years}, and inflation_rate={inflation_rate}")
     try:
         years = int(years)  # Convert years to integer
+        inflation_rate = float(inflation_rate) / 100  # Convert inflation rate to a decimal
 
         stock = yf.Ticker(symbol)
         data = stock.history(period='max')  # get all available data
@@ -41,7 +42,10 @@ def fetch_data(symbol, years):
         # Calculate the annualized rate of return
         beginning_price = closing_prices.iloc[0]
         ending_price = closing_prices.iloc[-1]
-        annualized_return = round(((ending_price / beginning_price) ** (1/years) - 1) * 100, 2)
+        nominal_return = ((ending_price / beginning_price) ** (1/years) - 1)
+
+        # Calculate the real return rate
+        real_return_rate = ((1 + nominal_return) / (1 + inflation_rate)) - 1
 
         # Format data as a dictionary
         data = {
@@ -51,7 +55,8 @@ def fetch_data(symbol, years):
             'mean': round(mean, 2),
             'std_dev': round(std_dev, 2),
             'confidence_interval': confidence_interval,
-            'annualized_return': annualized_return
+            'annualized_return': round(nominal_return * 100, 2),
+            'real_return_rate': round(real_return_rate * 100, 2)
         }
 
         # Print data as JSON
@@ -64,4 +69,5 @@ def fetch_data(symbol, years):
 if __name__ == "__main__":
     symbol = sys.argv[1] if len(sys.argv) > 1 else input("Enter stock symbol: ")
     years = int(sys.argv[2]) if len(sys.argv) > 2 else int(input("Enter number of years: "))
-    fetch_data(symbol, years)
+    inflation_rate = float(sys.argv[3]) if len(sys.argv) > 3 else float(input("Enter expected inflation rate: "))
+    fetch_data(symbol, years, inflation_rate)

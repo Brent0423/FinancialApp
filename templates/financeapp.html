@@ -1,54 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Finance App</title>
+    <title> Finance App</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/financeapp.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
     <div class="container">
         <div class="flex-container">
-            <!-- Investment Entry Form -->
             <div class="form-container">
                 <h1>Investment Entry</h1>
                 <form action="#" method="post" id="investmentForm">
-                    <!-- Stock Ticker Input -->
                     <label for="stockTicker">Stock Ticker:</label>
                     <input type="text" id="stockTicker" name="symbol" required><br><br>
-
-                    <!-- Investment Amount Input -->
                     <label for="investmentAmount">Investment Amount:</label>
                     <input type="number" id="investmentAmount" name="investmentAmount" required><br><br>
-
-                    <!-- Anticipated Return Rate Input -->
                     <div class="input-row">
                         <div class="input-group">
-                            <label for="returnRate">Anticipated Return Rate %:</label>
-                            <input type="number" id="returnRate" name="returnRate">
-                            <!-- Comment about the default return rate -->
+                            <label for="returnRate">Annualized Return Rate %</label>
+                            <input type="number" id="returnRate" name="returnRate" step="0.01">
                             <p class="note"><strong>Note: Default return rate % is from YFin API</strong></p>
                         </div>
                     </div>
-
-                    <!-- Desired Time Frame Selection -->
                     <label for="timeFrame">Desired Time Frame (years):</label>
                     <input type="number" id="timeFrame" name="timeFrame" min="1" required><br><br>
-
                     <div class="inflation-container">
-                        <label for="inflation">Expected Inflation Rate:</label>
-                        <input type="number" id="inflation" name="inflation">
+                        <label for="inflation">Expected Inflation Rate %</label>
+                        <input type="number" id="inflation" name="inflation" step="0.01">
                     </div>
-
-                    <!-- File Upload Input -->
                     <label for="fileUpload">Upload File:</label>
                     <input type="file" id="fileUpload" name="fileUpload"><br><br>
-
-                    <!-- Submit Button -->
                     <input id="submit" type="submit" value="Submit">
                 </form>
             </div>
-
-            <!-- Portfolio Management Table -->
             <div class="table-container">
                 <h1>Portfolio Management</h1>
                 <table>
@@ -78,27 +62,22 @@
                         </tr>
                         {% endif %}
                     </tbody>
-
-                    </tbody>
-
-                            {% if data %}
-                            <tr>
-                                <td>{{ data.stock_symbol }}</td>
-                                <td>{{ data.current_price }}</td>
-                                <td>{{ data.investment_amount }}</td>
-                                <td>{{ data.time_frame }}</td>
-                                <td>{{ data.annualized_return }}</td>
-                                <td>{{ data.real_rate }}</td>  <!-- Add this line -->
-                                <td>{{ data.confidence_interval }}</td>
-                                <td><button class="remove-btn">X</button></td>
-                            </tr>
-                            {% endif %}
-                        </tbody>
+                    {% if data %}
+                    <tr>
+                        <td>{{ data.stock_symbol }}</td>
+                        <td>{{ data.current_price }}</td>
+                        <td>{{ data.investment_amount }}</td>
+                        <td>{{ data.time_frame }}</td>
+                        <td>{{ data.annualized_return }}</td>
+                        <td>{{ data.real_rate }}</td>
+                        <td>{{ data.confidence_interval }}</td>
+                        <td><button class="remove-btn">X</button></td>
+                    </tr>
+                    {% endif %}
                 </table>
-                <!-- Generate Report Button -->
                 <br><br>
                 <div class="button-container">
-                    <button id="Generate" class="generate-report-btn">Generate Report</button>
+                    <button id="Generate" class="generate-report-btn" onclick="window.location.href='/investmentreport'">Generate Report</button>
                 </div>
             </div>
         </div>

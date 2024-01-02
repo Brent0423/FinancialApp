@@ -53,5 +53,9 @@ def update_table():
     # Return the data as JSON
     return jsonify(data)
 
+@app.route('/investmentreport', methods=['GET'])
+def investment_report():
+    return render_template('investmentreport.html')
+
 if __name__ == "__main__":
     app.run(debug=True)

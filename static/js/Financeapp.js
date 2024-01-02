@@ -34,6 +34,8 @@ $('#investmentForm').on('submit', function(event) {
                 var inflationRateDecimal = parseFloat(formObject['inflation']) / 100;
                 var realRateDecimal = (1 + nominalRateDecimal) / (1 + inflationRateDecimal) - 1;
                 realRate = (realRateDecimal * 100).toFixed(2); // Convert to percentage and round to two decimals
+            } else {
+                realRate = 'N/A'; // If inflation rate is not provided, set realRate to 'N/A'
             }
 
             // Adjust the annualized return and real rate of return if expected change in interest rate is provided
