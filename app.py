@@ -28,11 +28,17 @@ def update_table():
     investment_amount = request.form.get('investmentAmount')
     return_rate = request.form.get('returnRate')
     time_frame = request.form.get('timeFrame')
-    # ... get the rest of the form data ...
+    inflation_rate = request.form.get('inflationRate')  # Add this line
+
+    # Check if inflation_rate is None
+    if inflation_rate is None:
+        # Set a default value or return an error response
+        inflation_rate = '0.0'  # Default value
+        # return jsonify({'error': 'Inflation rate is required.'})  # Error response
 
     # Fetch the data for the entered stock symbol
     print("fetch_data called from update_table route")  # Add this line
-    fetched_data = fetch_data(symbol, time_frame)
+    fetched_data = fetch_data(symbol, time_frame, inflation_rate)  # Add inflation_rate here
 
     if fetched_data is None:
         return jsonify({'error': 'Failed to fetch data for symbol {}'.format(symbol)})
