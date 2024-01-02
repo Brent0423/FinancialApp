@@ -45,7 +45,7 @@ def update_table():
         'stock_symbol': symbol,
         'current_price': fetched_data['current_price'],  # Use the fetched current price
         'investment_amount': investment_amount,
-        'annualized_return': fetched_data['annualized_return'],  # Use the fetched annualized return
+        'annualized_return': return_rate if return_rate else fetched_data['annualized_return'],  # Use the return rate from the form data if it's available, otherwise use the fetched annualized return
         'time_frame': time_frame,
         'confidence_interval': f"{fetched_data['confidence_interval'][0]} - {fetched_data['confidence_interval'][1]}"  # Format the confidence interval as a string
     }

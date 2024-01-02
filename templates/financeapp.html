@@ -25,10 +25,8 @@
                         <div class="input-group">
                             <label for="returnRate">Anticipated Return Rate %:</label>
                             <input type="number" id="returnRate" name="returnRate">
-                        </div>
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="useYfin" name="useYfin">
-                            <label for="useYfin">YFin</label>
+                            <!-- Comment about the default return rate -->
+                            <p class="note"><strong>Note: Default return rate % is from YFin API</strong></p>
                         </div>
                     </div>
 
@@ -44,14 +42,6 @@
                     <!-- Expected Change in Interest Rate Input -->
                     <label for="interest">Expected Change in Interest Rate:</label><br>
                     <input type="number" id="interest" name="interest"><br>
-
-                    <!-- Data Source Selection -->
-                    <label for="dataSource">Data Source:</label>
-                    <select id="dataSource" name="dataSource" required>
-                        <option value="manual">Manual Entry</option>
-                        <option value="yahoo">Yahoo Finance</option>
-                        <option value="upload">File Upload</option>
-                    </select><br><br>
 
                     <!-- File Upload Input -->
                     <label for="fileUpload">Upload File:</label>
