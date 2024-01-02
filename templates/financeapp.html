@@ -39,10 +39,6 @@
                         <input type="number" id="inflation" name="inflation">
                     </div>
 
-                    <!-- Expected Change in Interest Rate Input -->
-                    <label for="interest">Expected Change in Interest Rate:</label><br>
-                    <input type="number" id="interest" name="interest"><br>
-
                     <!-- File Upload Input -->
                     <label for="fileUpload">Upload File:</label>
                     <input type="file" id="fileUpload" name="fileUpload"><br><br>
@@ -61,8 +57,9 @@
                             <th>Company</th>
                             <th>Stock Price ($)</th>
                             <th>Investment Amount ($)</th>
-                            <th>Anticipated Return Rate (%)</th>
                             <th>Time Frame (years)</th>
+                            <th>Annualized Return Rate (%)</th>
+                            <th>Real Rate %</th>
                             <th>Confidence Interval (%)</th>
                             <th>Actions</th>
                         </tr>
@@ -73,13 +70,30 @@
                             <td>{{ data.stock_symbol }}</td>
                             <td>{{ data.current_price }}</td>
                             <td>{{ data.investment_amount }}</td>
-                            <td>{{ data.annualized_return }}</td>
                             <td>{{ data.time_frame }}</td>
+                            <td>{{ data.annualized_return }}</td>
+                            <td>{{ data.real_rate }}</td>
                             <td>{{ data.confidence_interval }}</td>
                             <td><button class="remove-btn">X</button></td>
                         </tr>
                         {% endif %}
                     </tbody>
+
+                    </tbody>
+
+                            {% if data %}
+                            <tr>
+                                <td>{{ data.stock_symbol }}</td>
+                                <td>{{ data.current_price }}</td>
+                                <td>{{ data.investment_amount }}</td>
+                                <td>{{ data.time_frame }}</td>
+                                <td>{{ data.annualized_return }}</td>
+                                <td>{{ data.real_rate }}</td>  <!-- Add this line -->
+                                <td>{{ data.confidence_interval }}</td>
+                                <td><button class="remove-btn">X</button></td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
                 </table>
                 <!-- Generate Report Button -->
                 <br><br>
