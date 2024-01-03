@@ -12,11 +12,12 @@ def fetch_total_years_traded(symbol):
     total_years_traded = (datetime.now(pytz.timezone('America/New_York')) - first_trade_date).days // 365
     return total_years_traded
 
-def fetch_data(symbol, years, inflation_rate=0.0):
+def fetch_data(symbol, years, inflation_rate=None):
     print(f"fetch_data called with symbol={symbol}, years={years}, and inflation_rate={inflation_rate}")
     try:
         years = int(years)  # Convert years to integer
-        inflation_rate = float(inflation_rate) / 100  # Convert inflation rate to a decimal
+        if inflation_rate is not None:
+            inflation_rate = float(inflation_rate) / 100  # Convert inflation rate to a decimal if it's provided
 
         total_years_traded = fetch_total_years_traded(symbol)
         if years > total_years_traded:
@@ -51,7 +52,7 @@ def fetch_data(symbol, years, inflation_rate=0.0):
         ending_price = closing_prices.iloc[-1]
         nominal_return = ((ending_price / beginning_price) ** (1/years) - 1)
 
-        # Format data as a dictionary
+        # Create a dictionary with the data
         data = {
             'stock_symbol': symbol,
             'current_price': round(current_price, 2),
@@ -60,13 +61,13 @@ def fetch_data(symbol, years, inflation_rate=0.0):
             'std_dev': round(std_dev, 2),
             'confidence_interval': confidence_interval,
             'annualized_return': round(nominal_return * 100, 2),
-            'total_years_traded': total_years_traded,  # Add this line
+            'total_years_traded': total_years_traded,
         }
 
-        if inflation_rate and inflation_rate > 0.0:
-            # Calculate the real return rate
-            real_return_rate = ((1 + nominal_return) / (1 + inflation_rate)) - 1
-            data['real_return_rate'] = round(real_return_rate * 100, 2)
+        if inflation_rate is not None:
+            # Calculate the real return
+            real_return = ((1 + nominal_return) / (1 + inflation_rate)) - 1
+            data['real_return'] = round(real_return * 100, 2)
 
         # Print data as JSON
         print(json.dumps(data))

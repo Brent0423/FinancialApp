@@ -56,24 +56,11 @@
                             <td>{{ data.investment_amount }}</td>
                             <td>{{ data.time_frame }}</td>
                             <td>{{ data.annualized_return }}</td>
-                            <td>{{ data.real_rate }}</td>
+                            <td>{{ data.real_return }}</td>
                             <td>{{ data.confidence_interval }}</td>
                             <td><button class="remove-btn">X</button></td>
                         </tr>
                         {% endif %}
-                    </tbody>
-                    {% if data %}
-                    <tr>
-                        <td>{{ data.stock_symbol }}</td>
-                        <td>{{ data.current_price }}</td>
-                        <td>{{ data.investment_amount }}</td>
-                        <td>{{ data.time_frame }}</td>
-                        <td>{{ data.annualized_return }}</td>
-                        <td>{{ data.real_rate }}</td>
-                        <td>{{ data.confidence_interval }}</td>
-                        <td><button class="remove-btn">X</button></td>
-                    </tr>
-                    {% endif %}
                 </table>
                 <br><br>
                 <div class="button-container">
