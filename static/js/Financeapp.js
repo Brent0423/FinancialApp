@@ -1,71 +1,76 @@
-$(document).on('click', '.remove-btn', function() {
-    $(this).closest('tr').remove();
-});
+// Function to fetch the maximum trading years from the API
+function fetchMaxTradingYears(stockSymbol) {
+    return fetch(`/maxTradingYears?symbol=${stockSymbol}`)
+        .then(response => response.json())
+        .then(data => {
+            return data.maxTradingYears;
+        })
+        .catch(error => console.error('Error fetching max trading years:', error));
+}
 
-$('#investmentForm').on('submit', function(event) {
+// Function to handle form submission
+function handleFormSubmit(event) {
     event.preventDefault();
 
-    var formData = $(this).serializeArray();
+    var formData = $('#investmentForm').serializeArray();
     var formObject = {};
     formData.forEach(function(item) {
         formObject[item.name] = item.value;
     });
 
-    $.ajax({
-        url: '/update_table',
-        type: 'POST',
-        data: formData,
-        success: function(data) {
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
+    console.log('Time frame:', formObject['timeFrame']);
 
-            // If there's a warning message, show it
-            if (data.warning) {
-                alert(data.warning);
-            }
+    // Check if inflation is an empty string
+    if (formObject['inflation'] === '') {
+        // Option 1: Set a default value
+        formObject['inflation'] = '0';
 
-            var returnRate = formObject['returnRate'] ? formObject['returnRate'] : data.annualized_return;
+        // Option 2: Show an error message and return
+        // alert('Please enter a value for inflation.');
+        // return;
+    }
 
-            var realRate = returnRate;
-            if (formObject['inflation']) {
-                var nominalRateDecimal = parseFloat(returnRate) / 100;
-                var inflationRateDecimal = parseFloat(formObject['inflation']) / 100;
-                var realRateDecimal = (1 + nominalRateDecimal) / (1 + inflationRateDecimal) - 1;
-                realRate = (realRateDecimal * 100).toFixed(2);
-            } else {
-                realRate = 'N/A';
-            }
-
-            if (formObject['expectedInterestRateChange']) {
-                var expectedInterestRateChange = parseFloat(formObject['expectedInterestRateChange']);
-                returnRate -= expectedInterestRateChange;
-                realRate -= expectedInterestRateChange;
-            }
-
-            var confidenceInterval = formObject['confidenceInterval'] ? formObject['confidenceInterval'] : data.confidence_interval;
-
-            const newRow = $('<tr></tr>');
-            newRow.append('<td>' + data.stock_symbol + '</td>');
-            newRow.append('<td>' + data.current_price + '</td>');
-            newRow.append('<td>' + formObject['investmentAmount'] + '</td>');
-            newRow.append('<td>' + formObject['timeFrame'] + '</td>');
-            newRow.append('<td>' + returnRate + '</td>');
-            newRow.append('<td>' + realRate + '</td>');
-            newRow.append('<td>' + confidenceInterval + '</td>');
-            newRow.append('<td><button class="remove-btn">X</button></td>');
-
-            $('tbody').append(newRow);
-
-            $('#investmentForm')[0].reset();
-        },
-        error: function(xhr, status, error) {
-            alert("An error occurred: " + error);
+    fetchMaxTradingYears(formObject['symbol']).then(maxTradingYears => {
+        if (parseInt(formObject['timeFrame'], 10) > maxTradingYears) {
+            alert(`Warning: The stock has only been traded for ${maxTradingYears} years. Please use a number less than or equal to ${maxTradingYears}.`);
+            return;
         }
+
+        // Continue with the form submission if the time frame is valid
+        $.ajax({
+            url: '/update_table',
+            type: 'POST',
+            data: formData,
+            success: function(data) {
+                // Update the table with new data
+                var newRow = `<tr>
+                                <td>${data.stock_symbol}</td>
+                                <td>${data.current_price}</td>
+                                <td>${data.investment_amount}</td>
+                                <td>${data.time_frame}</td>
+                                <td>${data.annualized_return}</td>
+                                <td>${data.real_rate}</td>
+                                <td>${data.confidence_interval}</td>
+                                <td><button class="remove-btn">X</button></td>
+                              </tr>`;
+                $('table tbody').append(newRow);
+            },
+            error: function(xhr, status, error) {
+                alert("An error occurred: " + error);
+            }
+        });
     });
+}
+
+// Attach event listener to the form submit event
+$('#investmentForm').on('submit', handleFormSubmit);
+
+// Existing code for removing rows
+$(document).on('click', '.remove-btn', function() {
+    $(this).closest('tr').remove();
 });
 
+// Existing code to handle initial GET request
 $.get('/', function(response) {
     if (response.warning) {
         alert(response.warning);

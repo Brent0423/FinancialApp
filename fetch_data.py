@@ -5,20 +5,27 @@ import pytz
 import numpy as np
 import json
 
-def fetch_data(symbol, years, inflation_rate):
+def fetch_total_years_traded(symbol):
+    stock = yf.Ticker(symbol)
+    data = stock.history(period='max')  # get all available data
+    first_trade_date = data.index[0]
+    total_years_traded = (datetime.now(pytz.timezone('America/New_York')) - first_trade_date).days // 365
+    return total_years_traded
+
+def fetch_data(symbol, years, inflation_rate=0.0):
     print(f"fetch_data called with symbol={symbol}, years={years}, and inflation_rate={inflation_rate}")
     try:
         years = int(years)  # Convert years to integer
         inflation_rate = float(inflation_rate) / 100  # Convert inflation rate to a decimal
 
-        stock = yf.Ticker(symbol)
-        data = stock.history(period='max')  # get all available data
-        first_trade_date = data.index[0]
-        total_years_traded = (datetime.now(pytz.timezone('America/New_York')) - first_trade_date).days // 365
+        total_years_traded = fetch_total_years_traded(symbol)
         if years > total_years_traded:
             print(f"Warning: {symbol} has only been traded for {total_years_traded} years. Using {total_years_traded} instead of {years}.")
             years = total_years_traded
+        else:
+            total_years_traded=years
 
+        stock = yf.Ticker(symbol)
         data = stock.history(period=f'{years}y')
         now = datetime.now(pytz.timezone('America/New_York')) - timedelta(days=1)  # get current date in 'America/New_York' timezone
         data = data.loc[data.index < now]  # exclude today's date
@@ -44,9 +51,6 @@ def fetch_data(symbol, years, inflation_rate):
         ending_price = closing_prices.iloc[-1]
         nominal_return = ((ending_price / beginning_price) ** (1/years) - 1)
 
-        # Calculate the real return rate
-        real_return_rate = ((1 + nominal_return) / (1 + inflation_rate)) - 1
-
         # Format data as a dictionary
         data = {
             'stock_symbol': symbol,
@@ -56,8 +60,13 @@ def fetch_data(symbol, years, inflation_rate):
             'std_dev': round(std_dev, 2),
             'confidence_interval': confidence_interval,
             'annualized_return': round(nominal_return * 100, 2),
-            'real_return_rate': round(real_return_rate * 100, 2)
+            'total_years_traded': total_years_traded,  # Add this line
         }
+
+        if inflation_rate and inflation_rate > 0.0:
+            # Calculate the real return rate
+            real_return_rate = ((1 + nominal_return) / (1 + inflation_rate)) - 1
+            data['real_return_rate'] = round(real_return_rate * 100, 2)
 
         # Print data as JSON
         print(json.dumps(data))
