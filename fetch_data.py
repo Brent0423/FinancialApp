@@ -4,6 +4,10 @@ from datetime import datetime, timedelta
 import pytz
 import numpy as np
 import json
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
 
 def fetch_total_years_traded(symbol):
     stock = yf.Ticker(symbol)
@@ -12,16 +16,21 @@ def fetch_total_years_traded(symbol):
     total_years_traded = (datetime.now(pytz.timezone('America/New_York')) - first_trade_date).days // 365
     return total_years_traded
 
-def fetch_data(symbol, years, inflation_rate=None):
-    print(f"fetch_data called with symbol={symbol}, years={years}, and inflation_rate={inflation_rate}")
+def fetch_data(symbol, years, inflation_rate=None, annualized_return=None):
+    logging.info(f"fetch_data called with symbol={symbol}, years={years}, inflation_rate={inflation_rate}, annualized_return={annualized_return}")
     try:
+        # Validate and convert inputs
+        if not symbol or not years:
+            return {'error': 'Missing required parameters.'}
         years = int(years)  # Convert years to integer
         if inflation_rate is not None:
             inflation_rate = float(inflation_rate) / 100  # Convert inflation rate to a decimal if it's provided
+        if annualized_return is not None:
+            annualized_return = float(annualized_return)
 
         total_years_traded = fetch_total_years_traded(symbol)
         if years > total_years_traded:
-            print(f"Warning: {symbol} has only been traded for {total_years_traded} years. Using {total_years_traded} instead of {years}.")
+            logging.warning(f"{symbol} has only been traded for {total_years_traded} years. Using {total_years_traded} instead of {years}.")
             years = total_years_traded
         else:
             total_years_traded=years
@@ -48,9 +57,13 @@ def fetch_data(symbol, years, inflation_rate=None):
                                round(mean + 1.96 * (std_dev / np.sqrt(len(first_prices))), 2))
 
         # Calculate the annualized rate of return
-        beginning_price = closing_prices.iloc[0]
-        ending_price = closing_prices.iloc[-1]
-        nominal_return = ((ending_price / beginning_price) ** (1/years) - 1)
+        if annualized_return is None:
+            beginning_price = closing_prices.iloc[0]
+            ending_price = closing_prices.iloc[-1]
+            nominal_return = ((ending_price / beginning_price) ** (1/years) - 1)
+            annualized_return = round(nominal_return * 100, 2)
+        else:
+            nominal_return = annualized_return / 100
 
         # Create a dictionary with the data
         data = {
@@ -60,7 +73,7 @@ def fetch_data(symbol, years, inflation_rate=None):
             'mean': round(mean, 2),
             'std_dev': round(std_dev, 2),
             'confidence_interval': confidence_interval,
-            'annualized_return': round(nominal_return * 100, 2),
+            'annualized_return': annualized_return,
             'total_years_traded': total_years_traded,
         }
 
@@ -69,15 +82,17 @@ def fetch_data(symbol, years, inflation_rate=None):
             real_return = ((1 + nominal_return) / (1 + inflation_rate)) - 1
             data['real_return'] = round(real_return * 100, 2)
 
-        # Print data as JSON
-        print(json.dumps(data))
+        # Log data as JSON
+        logging.info(json.dumps(data))
 
         return data
     except Exception as e:
-        print(f"An error occurred while fetching data for {symbol}: {e}")
+        logging.error(f"An error occurred while fetching data for {symbol}: {e}")
+        return {'error': f"An error occurred while fetching data for {symbol}: {e}"}
 
 if __name__ == "__main__":
     symbol = sys.argv[1] if len(sys.argv) > 1 else input("Enter stock symbol: ")
     years = int(sys.argv[2]) if len(sys.argv) > 2 else int(input("Enter number of years: "))
     inflation_rate = float(sys.argv[3]) if len(sys.argv) > 3 else float(input("Enter expected inflation rate: "))
-    fetch_data(symbol, years, inflation_rate)
+    annualized_return = float(sys.argv[4]) if len(sys.argv) > 4 else None
+    fetch_data(symbol, years, inflation_rate, annualized_return)

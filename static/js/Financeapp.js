@@ -17,6 +17,7 @@ const handleFormSubmit = event => {
     // If the inflation field is empty, set it to '0'
     formObject['inflation'] = formObject['inflation'] === '' ? '0' : formObject['inflation'];
     formObject['inflationRate'] = $('#inflation').val(); // Added this line
+    formObject['returnRate'] = $('#returnRate').val(); // Added this line
 
     // Fetch the maximum trading years for the stock symbol entered in the form
     fetchMaxTradingYears(formObject['symbol']).then(maxTradingYears => {

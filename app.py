@@ -43,30 +43,24 @@ def update_table():
     return_rate = request.form.get('returnRate')
     time_frame = request.form.get('timeFrame')
     inflation_rate = request.form.get('inflationRate')
-
-    # Check if inflation_rate is None
-    if inflation_rate is None:
-        # Set a default value or return an error response
-        inflation_rate = '0.0'  # Default value
+    annualized_return = request.form.get('returnRate')  # Get the annualized return from the form data
 
     # Fetch the data for the entered stock symbol
     print("fetch_data called from update_table route")
-    fetched_data = fetch_data(symbol, time_frame, inflation_rate)
+    fetched_data = fetch_data(symbol, time_frame, inflation_rate if inflation_rate and inflation_rate.replace('.', '', 1).isdigit() else None)
 
-    if fetched_data is None:
-        return jsonify({'error': 'Failed to fetch data for symbol {}'.format(symbol)})
-
-    # Process the form data and generate the investment report
-    # ...
+    # Check if inflation_rate is valid and if not, set real_return to 'N/A'
+    real_return = fetched_data['real_return'] if inflation_rate and inflation_rate.replace('.', '', 1).isdigit() else 'N/A'
 
     # Create a dictionary with the data for the new table row
     data = {
         'stock_symbol': symbol,
-        'current_price': fetched_data['current_price'],
+        'current_price': fetched_data['current_price'] if 'current_price' in fetched_data else 'N/A',
         'investment_amount': investment_amount,
-        'annualized_return': return_rate if return_rate else fetched_data['annualized_return'],
+        'annualized_return': annualized_return if annualized_return is not None else fetched_data.get('annualized_return', 'N/A'),  # Use the user input annualized return if provided, otherwise use the API data
+        'real_return': real_return,
         'time_frame': time_frame,
-        'confidence_interval': f"{fetched_data['confidence_interval'][0]} - {fetched_data['confidence_interval'][1]}"
+        'confidence_interval': f"{fetched_data.get('confidence_interval', ['N/A', 'N/A'])[0]} - {fetched_data.get('confidence_interval', ['N/A', 'N/A'])[1]}"
     }
 
     # Return the data as JSON
