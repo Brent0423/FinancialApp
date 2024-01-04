@@ -1,75 +1,93 @@
-const fetchMaxTradingYears = stockSymbol => fetch(`/maxTradingYears?symbol=${stockSymbol}`)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Invalid ticker symbol');
-        }
-        return response.json();
-    })
-    .then(data => data.maxTradingYears)
-    .catch(error => {
-        console.error('Error fetching max trading years:', error);
-        throw error;
-    });
+// Define some constants
+const INVALID_TICKER_SYMBOL = 'Invalid ticker symbol';
+const USD_FORMAT = { style: 'currency', currency: 'USD' };
 
-const handleFormSubmit = event => {
+// Define a function to fetch the maximum trading years for a stock
+function fetchMaxTradingYears(stockSymbol) {
+    return fetch(`/maxTradingYears?symbol=${stockSymbol}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(INVALID_TICKER_SYMBOL);
+            }
+            return response.json();
+        })
+        .then(data => data.maxTradingYears);
+}
+
+// Define a function to format an amount as a dollar amount
+function formatAsDollarAmount(amount) {
+    return new Intl.NumberFormat('en-US', USD_FORMAT).format(amount);
+}
+
+// Define a function to handle the form submission
+function handleFormSubmit(event) {
     event.preventDefault();
 
-    let formObject = $('#investmentForm').serializeArray().reduce((obj, item) => (obj[item.name] = item.value, obj), {});
+    const formObject = {};
+    $('#investmentForm').serializeArray().forEach(item => {
+        formObject[item.name] = item.value;
+    });
+
     formObject['inflation'] = formObject['inflation'] === '' ? '0' : formObject['inflation'];
     formObject['inflationRate'] = $('#inflation').val();
     formObject['returnRate'] = $('#returnRate').val();
 
-    // Format the investment amount as a dollar amount
-    let investmentAmount = parseFloat(formObject['investmentAmount']);
-    formObject['investmentAmount'] = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(investmentAmount);
+    formObject['investmentAmount'] = formatAsDollarAmount(parseFloat(formObject['investmentAmount']));
 
-    fetchMaxTradingYears(formObject['symbol']).then(maxTradingYears => {
-        if (parseInt(formObject['timeFrame'], 10) > maxTradingYears) {
-            alert(`Warning: The stock has only been traded for ${maxTradingYears} years. Please use a number less than or equal to ${maxTradingYears}.`);
-            return;
-        }
+    fetchMaxTradingYears(formObject['symbol'])
+        .then(maxTradingYears => {
+            if (parseInt(formObject['timeFrame'], 10) > maxTradingYears) {
+                alert(`Warning: The stock has only been traded for ${maxTradingYears} years. Please use a number less than or equal to ${maxTradingYears}.`);
+                return;
+            }
 
-        $.ajax({
-            url: '/update_table',
-            type: 'POST',
-            data: formObject,
-            success: data => {
-                const { stock_symbol, current_price, investment_amount, time_frame, annualized_return, real_return, confidence_interval } = data;
+            $.ajax({
+                url: '/update_table',
+                type: 'POST',
+                data: formObject,
+                success: data => {
+                    const formattedCurrentPrice = formatAsDollarAmount(parseFloat(data.current_price));
 
-                // Format the current price as a dollar amount
-                let currentPrice = parseFloat(current_price);
-                let formattedCurrentPrice = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(currentPrice);
-
-                $('table tbody').append(`<tr>
-                    <td>${stock_symbol}</td>
-                    <td>${formattedCurrentPrice}</td>
-                    <td>${investment_amount}</td>
-                    <td>${time_frame}</td>
-                    <td>${annualized_return}</td>
-                    <td>${real_return}</td>
-                    <td>${confidence_interval}</td>
-                    <td><button class="remove-btn">X</button></td>
-                </tr>`);
-            },
-            error: (xhr, status, error) => {
-                if (xhr.status === 400 && xhr.responseText === 'Invalid ticker symbol') {
-                    alert('Invalid ticker symbol. Please enter a valid ticker symbol.');
-                } else {
-                    alert("An error occurred: " + error);
+                    $('table tbody').append(`<tr>
+                        <td>${data.stock_symbol}</td>
+                        <td>${formattedCurrentPrice}</td>
+                        <td>${data.investment_amount}</td>
+                        <td>${data.time_frame}</td>
+                        <td>${data.annualized_return}</td>
+                        <td>${data.real_return}</td>
+                        <td>${data.confidence_interval}</td>
+                        <td><button class="remove-btn">X</button></td>
+                    </tr>`);
+                },
+                error: (xhr, status, error) => {
+                    if (xhr.status === 400 && xhr.responseText === INVALID_TICKER_SYMBOL) {
+                        alert(`${INVALID_TICKER_SYMBOL}. Please enter a valid ticker symbol.`);
+                    } else {
+                        alert("An error occurred: " + error);
+                    }
                 }
+            });
+        })
+        .catch(error => {
+            if (error.message === INVALID_TICKER_SYMBOL) {
+                alert(`${INVALID_TICKER_SYMBOL}. Please enter a valid ticker symbol.`);
+            } else {
+                console.error('Error:', error);
             }
         });
-    }).catch(error => {
-        if (error.message === 'Invalid ticker symbol') {
-            alert('Invalid ticker symbol. Please enter a valid ticker symbol.');
-        } else {
-            console.error('Error:', error);
-        }
-    });
 }
 
+// Attach the form submit handler
 $('#investmentForm').on('submit', handleFormSubmit);
 
-$(document).on('click', '.remove-btn', function() { $(this).closest('tr').remove(); });
+// Attach the click handler for the remove button
+$(document).on('click', '.remove-btn', function() {
+    $(this).closest('tr').remove();
+});
 
-$.get('/', response => response.warning && alert(response.warning));
+// Fetch the initial data
+$.get('/', response => {
+    if (response.warning) {
+        alert(response.warning);
+    }
+});
