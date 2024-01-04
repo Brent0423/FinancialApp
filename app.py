@@ -49,7 +49,13 @@ def update_table():
     fetched_data = fetch_data(symbol, time_frame, inflation_rate if inflation_rate and inflation_rate.replace('.', '', 1).isdigit() else None)
 
     # Check if inflation_rate is valid and if not, set real_return to 'N/A'
-    real_return = fetched_data['real_return'] if inflation_rate and inflation_rate.replace('.', '', 1).isdigit() else 'N/A'
+    real_return = 'N/A'
+    if inflation_rate and inflation_rate.replace('.', '', 1).isdigit():
+        if return_rate:
+            real_return = ((1 + float(return_rate) / 100) / (1 + float(inflation_rate) / 100)) - 1
+            real_return = round(real_return * 100, 2)
+        else:
+            real_return = fetched_data['real_return']
 
     # Create a dictionary with the data for the new table row
     data = {

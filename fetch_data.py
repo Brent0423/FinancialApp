@@ -60,7 +60,8 @@ def fetch_data(symbol, years, inflation_rate=None, annualized_return=None):
         if annualized_return is None:
             beginning_price = closing_prices.iloc[0]
             ending_price = closing_prices.iloc[-1]
-            nominal_return = ((ending_price / beginning_price) ** (1/years) - 1)
+            actual_years = len(closing_prices) / 252  # Approximate number of trading days in a year
+            nominal_return = ((ending_price / beginning_price) ** (1/actual_years) - 1)
             annualized_return = round(nominal_return * 100, 2)
         else:
             nominal_return = annualized_return / 100
