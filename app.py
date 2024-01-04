@@ -43,7 +43,6 @@ def update_table():
     return_rate = request.form.get('returnRate')
     time_frame = request.form.get('timeFrame')
     inflation_rate = request.form.get('inflationRate')
-    annualized_return = request.form.get('returnRate')  # Get the annualized return from the form data
 
     # Fetch the data for the entered stock symbol
     print("fetch_data called from update_table route")
@@ -57,7 +56,7 @@ def update_table():
         'stock_symbol': symbol,
         'current_price': fetched_data['current_price'] if 'current_price' in fetched_data else 'N/A',
         'investment_amount': investment_amount,
-        'annualized_return': annualized_return if annualized_return is not None else fetched_data.get('annualized_return', 'N/A'),  # Use the user input annualized return if provided, otherwise use the API data
+        'annualized_return': return_rate if return_rate else fetched_data.get('annualized_return', 'N/A'),
         'real_return': real_return,
         'time_frame': time_frame,
         'confidence_interval': f"{fetched_data.get('confidence_interval', ['N/A', 'N/A'])[0]} - {fetched_data.get('confidence_interval', ['N/A', 'N/A'])[1]}"
