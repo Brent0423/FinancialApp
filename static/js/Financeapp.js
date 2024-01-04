@@ -11,6 +11,10 @@ const handleFormSubmit = event => {
     formObject['inflationRate'] = $('#inflation').val();
     formObject['returnRate'] = $('#returnRate').val();
 
+    // Format the investment amount as a dollar amount
+    let investmentAmount = parseFloat(formObject['investmentAmount']);
+    formObject['investmentAmount'] = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(investmentAmount);
+
     fetchMaxTradingYears(formObject['symbol']).then(maxTradingYears => {
         if (parseInt(formObject['timeFrame'], 10) > maxTradingYears) {
             alert(`Warning: The stock has only been traded for ${maxTradingYears} years. Please use a number less than or equal to ${maxTradingYears}.`);
@@ -23,9 +27,14 @@ const handleFormSubmit = event => {
             data: formObject,
             success: data => {
                 const { stock_symbol, current_price, investment_amount, time_frame, annualized_return, real_return, confidence_interval } = data;
+
+                // Format the current price as a dollar amount
+                let currentPrice = parseFloat(current_price);
+                let formattedCurrentPrice = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(currentPrice);
+
                 $('table tbody').append(`<tr>
                     <td>${stock_symbol}</td>
-                    <td>${current_price}</td>
+                    <td>${formattedCurrentPrice}</td>
                     <td>${investment_amount}</td>
                     <td>${time_frame}</td>
                     <td>${annualized_return}</td>
@@ -41,6 +50,6 @@ const handleFormSubmit = event => {
 
 $('#investmentForm').on('submit', handleFormSubmit);
 
-$(document).on('click', '.remove-btn', () => $(this).closest('tr').remove());
+$(document).on('click', '.remove-btn', function() { $(this).closest('tr').remove(); });
 
 $.get('/', response => response.warning && alert(response.warning));

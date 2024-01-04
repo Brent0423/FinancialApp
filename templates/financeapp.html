@@ -1,43 +1,90 @@
+<!-- This line declares the document type as HTML -->
 <!DOCTYPE html>
+
+<!-- This is the opening tag for the HTML document -->
 <html>
+
+<!-- This is the opening tag for the head section of the HTML document -->
 <head>
+    <!-- This line sets the title of the webpage -->
     <title> Finance App</title>
+
+    <!-- This line includes an external CSS file -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/financeapp.css') }}">
+
+    <!-- This line includes the jQuery library from a CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
+
+<!-- This is the opening tag for the body section of the HTML document -->
 <body>
+    <!-- This div contains the main content of the webpage -->
     <div class="container">
+        <!-- This div is a flex container for layout purposes -->
         <div class="flex-container">
+            <!-- This div contains the investment entry form -->
             <div class="form-container">
+                <!-- This is the heading for the investment entry section -->
                 <h1>Investment Entry</h1>
+
+                <!-- This is the form for entering investment details -->
                 <form action="#" method="post" id="investmentForm">
+                    <!-- This label is for the stock ticker input field -->
                     <label for="stockTicker">Stock Ticker:</label>
+                    <!-- This input field is for entering the stock ticker -->
                     <input type="text" id="stockTicker" name="symbol" required><br><br>
+
+                    <!-- This label is for the investment amount input field -->
                     <label for="investmentAmount">Investment Amount:</label>
+                    <!-- This input field is for entering the investment amount -->
                     <input type="number" id="investmentAmount" name="investmentAmount" required><br><br>
+
+                    <!-- This div contains an input group for the return rate -->
                     <div class="input-row">
                         <div class="input-group">
+                            <!-- This label is for the return rate input field -->
                             <label for="returnRate">Annualized Return Rate %</label>
+                            <!-- This input field is for entering the return rate -->
                             <input type="number" id="returnRate" name="returnRate" step="0.01">
+                            <!-- This paragraph provides a note about the default return rate -->
                             <p class="note"><strong>Note: Default return rate % is from YFin API</strong></p>
                         </div>
                     </div>
+
+                    <!-- This label is for the desired time frame input field -->
                     <label for="timeFrame">Desired Time Frame (years):</label>
+                    <!-- This input field is for entering the desired time frame -->
                     <input type="number" id="timeFrame" name="timeFrame" min="1" required><br><br>
+
+                    <!-- This div contains an input field for expected inflation rate -->
                     <div class="inflation-container">
+                        <!-- This label is for the inflation input field -->
                         <label for="inflation">Expected Inflation Rate %</label>
+                        <!-- This input field is for entering the expected inflation rate -->
                         <input type="number" id="inflation" name="inflation" step="0.01">
                     </div>
+
+                    <!-- This label is for the file upload input field -->
                     <label for="fileUpload">Upload File:</label>
+                    <!-- This input field is for uploading a file -->
                     <input type="file" id="fileUpload" name="fileUpload"><br><br>
+
+                    <!-- This input is the submit button for the form -->
                     <input id="submit" type="submit" value="Submit">
                 </form>
             </div>
+
+            <!-- This div contains the portfolio management table -->
             <div class="table-container">
+                <!-- This is the heading for the portfolio management section -->
                 <h1>Portfolio Management</h1>
+
+                <!-- This is the table for displaying portfolio data -->
                 <table>
+                    <!-- This is the table header section -->
                     <thead>
                         <tr>
+                            <!-- These are the column headers for the table -->
                             <th>Company</th>
                             <th>Stock Price ($)</th>
                             <th>Investment Amount ($)</th>
@@ -48,9 +95,14 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
+
+                    <!-- This is the table body section -->
                     <tbody>
+                        <!-- This is a conditional statement to check if data exists -->
                         {% if data %}
+                        <!-- This is a table row for displaying portfolio data -->
                         <tr>
+                            <!-- These table cells display the portfolio data -->
                             <td>{{ data.stock_symbol }}</td>
                             <td>{{ data.current_price }}</td>
                             <td>{{ data.investment_amount }}</td>
@@ -58,14 +110,18 @@
                             <td>{{ data.annualized_return }}</td>
                             <td>{{ data.real_return }}</td>
                             <td>{{ data.confidence_interval }}</td>
+                            <!-- This table cell contains a button for removing the portfolio entry -->
                             <td><button class="remove-btn">X</button></td>
                         </tr>
                         {% endif %}
+                    </tbody>
                 </table>
                 <br><br>
             </div>
         </div>
     </div>
+
+    <!-- This script includes a JavaScript file -->
     <script src="{{ url_for('static', filename='js/Financeapp.js') }}"></script>
 </body>
 </html>
