@@ -29,11 +29,7 @@ def fetch_data(symbol, years, inflation_rate=None, annualized_return=None):
             annualized_return = float(annualized_return)
 
         total_years_traded = fetch_total_years_traded(symbol)
-        if years > total_years_traded:
-            logging.warning(f"{symbol} has only been traded for {total_years_traded} years. Using {total_years_traded} instead of {years}.")
-            years = total_years_traded
-        else:
-            total_years_traded=years
+        years = min(years, total_years_traded)
 
         stock = yf.Ticker(symbol)
         data = stock.history(period=f'{years}y')

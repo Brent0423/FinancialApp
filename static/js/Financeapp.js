@@ -1,7 +1,15 @@
 const fetchMaxTradingYears = stockSymbol => fetch(`/maxTradingYears?symbol=${stockSymbol}`)
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Invalid ticker symbol');
+        }
+        return response.json();
+    })
     .then(data => data.maxTradingYears)
-    .catch(error => console.error('Error fetching max trading years:', error));
+    .catch(error => {
+        console.error('Error fetching max trading years:', error);
+        throw error;
+    });
 
 const handleFormSubmit = event => {
     event.preventDefault();
@@ -43,8 +51,20 @@ const handleFormSubmit = event => {
                     <td><button class="remove-btn">X</button></td>
                 </tr>`);
             },
-            error: (xhr, status, error) => alert("An error occurred: " + error)
+            error: (xhr, status, error) => {
+                if (xhr.status === 400 && xhr.responseText === 'Invalid ticker symbol') {
+                    alert('Invalid ticker symbol. Please enter a valid ticker symbol.');
+                } else {
+                    alert("An error occurred: " + error);
+                }
+            }
         });
+    }).catch(error => {
+        if (error.message === 'Invalid ticker symbol') {
+            alert('Invalid ticker symbol. Please enter a valid ticker symbol.');
+        } else {
+            console.error('Error:', error);
+        }
     });
 }
 
