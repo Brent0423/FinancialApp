@@ -58,6 +58,9 @@ function handleFormSubmit(event) {
                         <td>${data.confidence_interval}</td>
                         <td><button class="remove-btn">X</button></td>
                     </tr>`);
+
+                    // Reset the form
+                    $('#investmentForm')[0].reset();
                 },
                 error: (xhr, status, error) => {
                     if (xhr.status === 400 && xhr.responseText === INVALID_TICKER_SYMBOL) {
