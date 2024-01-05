@@ -70,4 +70,5 @@ if __name__ == "__main__":
     years = int(input("Enter number of years: "))
     inflation_rate = float(input("Enter expected inflation rate: "))
     annualized_return = None
-    fetch_data(symbol, years, inflation_rate, annualized_return)
+    result = fetch_data(symbol, years, inflation_rate, annualized_return)
+    print(result)

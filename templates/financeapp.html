@@ -14,23 +14,23 @@
                 <!-- Investment form -->
                 <form action="#" method="post" id="investmentForm">
                     <label for="stockTicker">Stock Ticker:</label>
-                    <input type="text" id="stockTicker" name="symbol" required><br><br>
+                    <input type="text" id="stockTicker" name="symbol" required placeholder="Enter stock ticker"><br><br>
                     <label for="investmentAmount">Investment Amount:</label>
-                    <input type="number" id="investmentAmount" name="investmentAmount" required><br><br>
+                    <input type="number" id="investmentAmount" name="investmentAmount" required placeholder="Enter investment amount"><br><br>
                     <!-- Annualized Return Rate with note -->
                     <div class="input-row">
                         <div class="input-group">
                             <label for="returnRate">Annualized Return Rate %</label>
-                            <input type="number" id="returnRate" name="returnRate" step="0.01">
+                            <input type="number" id="returnRate" name="returnRate" step="0.01" placeholder="Enter annualized return">
                             <p class="note"><strong>Note: Default return rate % is from YFin API</strong></p>
                         </div>
                     </div>
                     <label for="timeFrame">Desired Time Frame (years):</label>
-                    <input type="number" id="timeFrame" name="timeFrame" min="1" required><br><br>
+                    <input type="number" id="timeFrame" name="timeFrame" min="1" required placeholder="Enter desired time frame"><br><br>
                     <!-- Expected Inflation Rate -->
                     <div class="inflation-container">
                         <label for="inflation">Expected Inflation Rate %</label>
-                        <input type="number" id="inflation" name="inflation" step="0.01">
+                        <input type="number" id="inflation" name="inflation" step="0.01" placeholder="Enter expected inflation rate">
                     </div>
                     <br><br>
                     <input id="submit" type="submit" value="Submit">
