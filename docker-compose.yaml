@@ -1,0 +1,8 @@
+version: '3'  # Docker Compose file version
+services:
+  my_finance_app:  # Service name
+    build: .  # Build context
+    ports:
+      - "5000:5000"  # Port mapping
+    volumes:
+      - .:/app  # Volume mapping

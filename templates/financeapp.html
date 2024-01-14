@@ -1,77 +1,120 @@
 <!DOCTYPE html>
+<!-- Main HTML document for the Finance App -->
 <html>
-<head>
+  <head>
     <title>Finance App</title>
     <!-- CSS and jQuery inclusion -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/financeapp.css') }}">
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/financeapp.css') }}"
+    />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-</head>
-<body>
+  </head>
+  <body>
+    <!-- Main application container -->
     <div class="container">
-        <div class="flex-container">
-            <div class="form-container">
-                <h1>Investment Entry</h1>
-                <!-- Investment form -->
-                <form action="#" method="post" id="investmentForm">
-                    <label for="stockTicker">Stock Ticker:</label>
-                    <input type="text" id="stockTicker" name="symbol" required placeholder="Enter stock ticker"><br><br>
-                    <label for="investmentAmount">Investment Amount:</label>
-                    <input type="number" id="investmentAmount" name="investmentAmount" required placeholder="Enter investment amount"><br><br>
-                    <!-- Annualized Return Rate with note -->
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="returnRate">Annualized Return Rate %</label>
-                            <input type="number" id="returnRate" name="returnRate" step="0.01" placeholder="Enter annualized return">
-                            <p class="note"><strong>Note: Default return rate % is from YFin API</strong></p>
-                        </div>
-                    </div>
-                    <label for="timeFrame">Desired Time Frame (years):</label>
-                    <input type="number" id="timeFrame" name="timeFrame" min="1" required placeholder="Enter desired time frame"><br><br>
-                    <!-- Expected Inflation Rate -->
-                    <div class="inflation-container">
-                        <label for="inflation">Expected Inflation Rate %</label>
-                        <input type="number" id="inflation" name="inflation" step="0.01" placeholder="Enter expected inflation rate">
-                    </div>
-                    <br><br>
-                    <input id="submit" type="submit" value="Submit">
-                </form>
+      <!-- Flex container for responsive layout -->
+      <div class="flex-container">
+        <!-- Investment form container -->
+        <div class="form-container">
+          <h1>Investment Entry</h1>
+          <!-- Investment entry form -->
+          <form action="#" method="post" id="investmentForm">
+            <label for="stockTicker">Stock Ticker:</label>
+            <input
+              type="text"
+              id="stockTicker"
+              name="symbol"
+              required
+              placeholder="Enter stock ticker"
+            /><br /><br />
+            <label for="investmentAmount">Investment Amount:</label>
+            <input
+              type="number"
+              id="investmentAmount"
+              name="investmentAmount"
+              required
+              placeholder="Enter investment amount"
+            /><br /><br />
+            <!-- Input for annualized return rate with a note -->
+            <div class="input-row">
+              <div class="input-group">
+                <label for="returnRate">Annualized Return Rate %</label>
+                <input
+                  type="number"
+                  id="returnRate"
+                  name="returnRate"
+                  step="0.01"
+                  placeholder="Enter annualized return"
+                />
+                <p class="note">
+                  <strong>Note: Default return rate % is from YFin API</strong>
+                </p>
+              </div>
             </div>
-            <!-- Portfolio table -->
-            <div class="table-container">
-                <h1>Portfolio Management</h1>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Company</th>
-                            <th>Stock Price ($)</th>
-                            <th>Investment Amount ($)</th>
-                            <th>Time Frame (years)</th>
-                            <th>Annualized Return Rate (%)</th>
-                            <th>Real Rate (%)</th>
-                            <th>Confidence Interval (%)</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if data %}
-                        <tr>
-                            <td>{{ data.stock_symbol }}</td>
-                            <td>{{ data.current_price }}</td>
-                            <td>{{ data.investment_amount }}</td>
-                            <td>{{ data.time_frame }}</td>
-                            <td>{{ data.annualized_return }}</td>
-                            <td>{{ data.real_return }}</td>
-                            <td>{{ data.confidence_interval }}</td>
-                            <td><button class="remove-btn">X</button></td>
-                        </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
-                <br><br>
+            <label for="timeFrame">Desired Time Frame (years):</label>
+            <input
+              type="number"
+              id="timeFrame"
+              name="timeFrame"
+              min="1"
+              required
+              placeholder="Enter desired time frame"
+            /><br /><br />
+            <!-- Input for expected inflation rate -->
+            <div class="inflation-container">
+              <label for="inflation">Expected Inflation Rate %</label>
+              <input
+                type="number"
+                id="inflation"
+                name="inflation"
+                step="0.01"
+                placeholder="Enter expected inflation rate"
+              />
             </div>
+            <br /><br />
+            <input id="submit" type="submit" value="Submit" />
+          </form>
         </div>
+        <!-- Portfolio management table container -->
+        <div class="table-container">
+          <h1>Portfolio Management</h1>
+          <!-- Table for portfolio management -->
+          <table>
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Stock Price ($)</th>
+                <th>Investment Amount ($)</th>
+                <th>Time Frame (years)</th>
+                <th>Annualized Return Rate (%)</th>
+                <th>Real Rate (%)</th>
+                <th>Confidence Interval (%)</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Dynamic data rendering using template engine -->
+              {% if data %}
+              <tr>
+                <td>{{ data.stock_symbol }}</td>
+                <td>{{ data.current_price }}</td>
+                <td>{{ data.investment_amount }}</td>
+                <td>{{ data.time_frame }}</td>
+                <td>{{ data.annualized_return }}</td>
+                <td>{{ data.real_return }}</td>
+                <td>{{ data.confidence_interval }}</td>
+                <td><button class="remove-btn">X</button></td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+          <br /><br />
+        </div>
+      </div>
     </div>
-    <!-- JavaScript inclusion -->
+    <!-- JavaScript functionalities -->
     <script src="{{ url_for('static', filename='js/Financeapp.js') }}"></script>
-</body>
+  </body>
 </html>

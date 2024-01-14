@@ -1,7 +1,7 @@
-/* Google Font Import */
+/* Google Font Import: This section imports the 'Roboto' font from Google Fonts. */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-/* Base Styles */
+/* Base Styles: Defines the base styles for the application, including body and container. */
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #e8eff1;
@@ -15,7 +15,7 @@ body {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Form Styles */
+/* Form Styles: Styling for various form elements like inputs and select dropdowns. */
 input[type="text"],
 input[type="number"],
 select {
