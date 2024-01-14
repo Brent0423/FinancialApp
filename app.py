@@ -1,15 +1,22 @@
 from flask import Flask, render_template, request, jsonify
 from fetch_data import fetch_data, fetch_total_years_traded
 
+
 class FinancialApp:
     def __init__(self):
+        # Initialize Flask app and define routes
         self.app = Flask(__name__)
-        self.app.add_url_rule('/', view_func=self.home, methods=['GET'])
-        self.app.add_url_rule('/maxTradingYears', view_func=self.max_trading_years, methods=['GET'])
-        self.app.add_url_rule('/update_table', view_func=self.update_table, methods=['POST'])
-        self.app.add_url_rule('/investmentreport', view_func=self.investment_report, methods=['GET'])
+        self.app.route('/', methods=['GET'])(self.home)
+        self.app.route('/maxTradingYears', methods=['GET'])(self.max_trading_years)
+        self.app.route('/update_table', methods=['POST'])(self.update_table)
+        self.app.route('/investmentreport', methods=['GET'])(self.investment_report)
+
+    def run(self):
+        # Run the Flask app
+        self.app.run(debug=True)
 
     def home(self):
+        # Fetch data for a given stock symbol and time frame
         stock_symbol = request.args.get('symbol')
         time_frame = request.args.get('timeFrame')
 
@@ -19,9 +26,11 @@ class FinancialApp:
             data = fetch_data(stock_symbol, time_frame)
             total_years_traded = data['total_years_traded']
 
+        # Render the home page with the fetched data
         return render_template('financeapp.html', data=data, total_years_traded=total_years_traded)
 
     def max_trading_years(self):
+        # Fetch the maximum trading years for a given stock symbol
         stock_symbol = request.args.get('symbol')
 
         if stock_symbol:
@@ -31,6 +40,7 @@ class FinancialApp:
             return jsonify("No data")
 
     def update_table(self):
+        # Fetch data for a given stock symbol and update the table
         symbol = request.form.get('symbol')
         investment_amount = request.form.get('investmentAmount')
         return_rate = request.form.get('returnRate')
@@ -54,14 +64,18 @@ class FinancialApp:
             'annualized_return': return_rate if return_rate else fetched_data.get('annualized_return', 'N/A'),
             'real_return': real_return,
             'time_frame': time_frame,
-            'confidence_interval': f"{fetched_data.get('confidence_interval', ['N/A', 'N/A'])[0]} - {fetched_data.get('confidencse_interval', ['N/A', 'N/A'])[1]}"
+            'confidence_interval': f"{fetched_data.get('confidence_interval', ['N/A', 'N/A'])[0]} - {fetched_data.get('confidence_interval', ['N/A', 'N/A'])[1]}"
         }
 
+        # Return the updated data as JSON
         return jsonify(data)
 
     def investment_report(self):
+        # Render the investment report page
         return render_template('investmentreport.html')
 
+
 if __name__ == "__main__":
-    financial_app = FinancialApp()
-    financial_app.app.run(debug=True)
+    # Create an instance of FinancialApp and run it
+    app = FinancialApp()
+    app.run()
