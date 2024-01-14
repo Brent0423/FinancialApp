@@ -228,7 +228,7 @@ button:hover {
 
 /* Ensure the input does not stretch too much */
 .input-group input[type="number"] {
-    width: auto; /* Or you can specify a width */
+    width: auto;
 }
 
 /* Additional Styles */

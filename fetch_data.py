@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import pytz
 import numpy as np
 
-# Define a class to represent a stock
+# Class to represent a stock
 class Stock:
     def __init__(self, symbol):
         # Initialize with a symbol and create a yfinance Ticker object
@@ -16,7 +16,7 @@ class Stock:
         # Fetches historical stock data for the specified period
         self.data = self.ticker.history(period=period)
 
-# Define a class to fetch data for a stock
+# Class to fetch data for a stock
 class StockDataFetcher:
     def __init__(self, stock):
         # Initialize with a Stock object
