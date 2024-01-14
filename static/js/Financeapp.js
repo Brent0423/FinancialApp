@@ -1,79 +1,50 @@
-// Constants for error messages and formatting
-const INVALID_TICKER_SYMBOL = 'Invalid ticker symbol';
-const USD_FORMAT = { style: 'currency', currency: 'USD' };
-
-// Class to fetch stock data
-class StockDataFetcher {
-    constructor(stockSymbol) {
-        // Initialize with a stock symbol
-        this.stockSymbol = stockSymbol;
+class FinanceApp {
+    constructor() {
+        this.INVALID_TICKER_SYMBOL = 'Invalid ticker symbol';
+        this.USD_FORMAT = { style: 'currency', currency: 'USD' };
+        this.formObject = {};
     }
 
-    // Method to fetch the maximum number of trading years for a stock
-    fetchMaxTradingYears() {
-        return fetch(`/maxTradingYears?symbol=${this.stockSymbol}`)
+    fetchMaxTradingYears(stockSymbol) {
+        return fetch(`/maxTradingYears?symbol=${stockSymbol}`)
             .then(response => {
-                // Throw an error if the response is not OK
                 if (!response.ok) {
-                    throw new Error(INVALID_TICKER_SYMBOL);
+                    throw new Error(this.INVALID_TICKER_SYMBOL);
                 }
-                // Parse the response as JSON
                 return response.json();
             })
             .then(data => data.maxTradingYears);
     }
-}
 
-// Class to handle form submissions
-class FormHandler {
-    constructor(formId) {
-        // Initialize with a form ID
-        this.formId = formId;
-    }
-
-    // Method to format an amount as a dollar amount
     formatAsDollarAmount(amount) {
-        return new Intl.NumberFormat('en-US', USD_FORMAT).format(amount);
+        return new Intl.NumberFormat('en-US', this.USD_FORMAT).format(amount);
     }
 
-    // Method to handle form submissions
     handleFormSubmit(event) {
-        // Prevent the default form submission behavior
         event.preventDefault();
 
-        // Create an object from the form data
-        const formObject = {};
-        $(this.formId).serializeArray().forEach(item => {
-            formObject[item.name] = item.value;
-        });
+        this.serializeForm();
 
-        // Set default values for inflation and return rate
-        formObject['inflation'] = formObject['inflation'] === '' ? '0' : formObject['inflation'];
-        formObject['inflationRate'] = $('#inflation').val();
-        formObject['returnRate'] = $('#returnRate').val();
+        this.formObject['inflation'] = this.formObject['inflation'] === '' ? '0' : this.formObject['inflation'];
+        this.formObject['inflationRate'] = $('#inflation').val();
+        this.formObject['returnRate'] = $('#returnRate').val();
 
-        // Format the investment amount as a dollar amount
-        formObject['investmentAmount'] = this.formatAsDollarAmount(parseFloat(formObject['investmentAmount']));
+        this.formObject['investmentAmount'] = this.formatAsDollarAmount(parseFloat(this.formObject['investmentAmount']));
 
-        // Create a new StockDataFetcher and fetch the maximum number of trading years
-        const fetcher = new StockDataFetcher(formObject['symbol']);
-        fetcher.fetchMaxTradingYears()
+        this.fetchMaxTradingYears(this.formObject['symbol'])
             .then(maxTradingYears => {
-                // Warn the user if the time frame is greater than the maximum number of trading years
-                if (parseInt(formObject['timeFrame'], 10) > maxTradingYears) {
+                if (parseInt(this.formObject['timeFrame'], 10) > maxTradingYears) {
                     alert(`Warning: The stock has only been traded for ${maxTradingYears} years. Please use a number less than or equal to ${maxTradingYears}.`);
                     return;
                 }
 
-                // Send a POST request to update the table
                 $.ajax({
                     url: '/update_table',
                     type: 'POST',
-                    data: formObject,
+                    data: this.formObject,
                     success: data => {
-                        // Format the current price as a dollar amount
                         const formattedCurrentPrice = this.formatAsDollarAmount(parseFloat(data.current_price));
-                        // Append a new row to the table
+
                         $('table tbody').append(`<tr>
                             <td>${data.stock_symbol}</td>
                             <td>${formattedCurrentPrice}</td>
@@ -84,14 +55,10 @@ class FormHandler {
                             <td>${data.confidence_interval}</td>
                             <td><button class="remove-btn">X</button></td>
                         </tr>`);
-
-                        // Reset the form
-                        $(this.formId)[0].reset();
                     },
                     error: (xhr, status, error) => {
-                        // Handle errors
-                        if (xhr.status === 400 && xhr.responseText === INVALID_TICKER_SYMBOL) {
-                            alert(`${INVALID_TICKER_SYMBOL}. Please enter a valid ticker symbol.`);
+                        if (xhr.status === 400 && xhr.responseText === this.INVALID_TICKER_SYMBOL) {
+                            alert(`${this.INVALID_TICKER_SYMBOL}. Please enter a valid ticker symbol.`);
                         } else {
                             alert("An error occurred: " + error);
                         }
@@ -99,31 +66,41 @@ class FormHandler {
                 });
             })
             .catch(error => {
-                // Handle errors
-                if (error.message === INVALID_TICKER_SYMBOL) {
-                    alert(`${INVALID_TICKER_SYMBOL}. Please enter a valid ticker symbol.`);
+                if (error.message === this.INVALID_TICKER_SYMBOL) {
+                    alert(`${this.INVALID_TICKER_SYMBOL}. Please enter a valid ticker symbol.`);
                 } else {
                     console.error('Error:', error);
                 }
             });
     }
+
+    serializeForm() {
+        this.formObject = {};
+        $('#investmentForm').serializeArray().forEach(item => {
+            this.formObject[item.name] = item.value;
+        });
+    }
+
+    attachEventHandlers() {
+        $('#investmentForm').on('submit', this.handleFormSubmit.bind(this));
+        $(document).on('click', '.remove-btn', function () {
+            $(this).closest('tr').remove();
+        });
+    }
+
+    fetchInitialData() {
+        $.get('/', response => {
+            if (response.warning) {
+                alert(response.warning);
+            }
+        });
+    }
+
+    initialize() {
+        this.attachEventHandlers();
+        this.fetchInitialData();
+    }
 }
 
-// Event Handlers
-// Create a new FormHandler for the investment form
-const formHandler = new FormHandler('#investmentForm');
-// Handle form submissions
-$('#investmentForm').on('submit', formHandler.handleFormSubmit.bind(formHandler));
-
-// Handle clicks on the remove button
-$(document).on('click', '.remove-btn', function() {
-    $(this).closest('tr').remove();
-});
-
-// Initial Data Fetch
-// Fetch data when the page loads
-$.get('/', response => {
-    if (response.warning) {
-        alert(response.warning);
-    }
-});
+const financeApp = new FinanceApp();
+financeApp.initialize();
