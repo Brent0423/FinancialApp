@@ -9,7 +9,6 @@ class FinancialApp:
         self.app.route('/', methods=['GET'])(self.home)
         self.app.route('/maxTradingYears', methods=['GET'])(self.max_trading_years)
         self.app.route('/update_table', methods=['POST'])(self.update_table)
-        self.app.route('/investmentreport', methods=['GET'])(self.investment_report)
 
     def run(self):
         # Run the Flask app
@@ -69,10 +68,6 @@ class FinancialApp:
 
         # Return the updated data as JSON
         return jsonify(data)
-
-    def investment_report(self):
-        # Render the investment report page
-        return render_template('investmentreport.html')
 
 
 if __name__ == "__main__":
