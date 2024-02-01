@@ -12,7 +12,7 @@ class FinancialApp:
 
     def run(self):
         # Run the Flask app
-        self.app.run(host='0.0.0.0', debug=True)
+        self.app.run(host='0.0.0.0', port=5001, debug=True)
 
     def home(self):
         # Fetch data for a given stock symbol and time frame
