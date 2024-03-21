@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from fetch_data import fetch_data, fetch_total_years_traded
+import os
 
 app = Flask(__name__)  # Changed to use the 'app' variable directly for Flask instance
 
